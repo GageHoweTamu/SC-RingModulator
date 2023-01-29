@@ -1,0 +1,35 @@
+#include "VSTPlugin.h"
+
+class RingModulator : public VSTPlugin {
+ public:
+  RingModulator() {
+    // Initialize input and output buffers
+    input_buffer_.resize(kBufferSize);
+    output_buffer_.resize(kBufferSize);
+    sidechain_buffer_.resize(kBufferSize);
+  }
+
+  void Process(float* input, float* output, size_t num_samples) {
+    // Copy input samples to internal buffer
+    memcpy(&input_buffer_[0], input, num_samples * sizeof(float));
+    memcpy(&sidechain_buffer_[0], sidechain_input_, num_samples * sizeof(float));
+
+    // Perform ring modulation on input samples
+    for (size_t i = 0; i < num_samples; i++) {
+      output_buffer_[i] = input_buffer_[i] * sidechain_buffer_[i];
+    }
+
+    // Copy processed samples to output buffer
+    memcpy(output, &output_buffer_[0], num_samples * sizeof(float));
+  }
+
+ private:
+  static constexpr size_t kBufferSize = 1024;
+
+  float* sidechain_input_;
+  std::vector<float> input_buffer_;
+  std::vector<float> output_buffer_;
+  std::vector<float> sidechain_buffer_;
+};
+
+VST_EXPORT_SYMBOL(RingModulator);
