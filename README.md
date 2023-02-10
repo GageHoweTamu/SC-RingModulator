@@ -1,2 +1,2 @@
 # SC RingModulator
- Ring modulates a signal with its sidechain input
+ Future project; ring modulates a signal with its sidechain input
